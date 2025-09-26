@@ -48,7 +48,7 @@ public class GUI {
 
             countryList.setCellRenderer((list, value, index, isSelected,
                                          cellHasFocus) -> {
-                JLabel label = new JLabel((String) value);
+                JLabel label = new JLabel(value);
                 label.setIcon(flags.get(value));
                 label.setHorizontalTextPosition(SwingConstants.RIGHT);
                 label.setIconTextGap(10);
