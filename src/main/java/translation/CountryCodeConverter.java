@@ -16,6 +16,7 @@ public class CountryCodeConverter {
 
     private Map<String, String> countryCodeToCountry = new HashMap<>();
     private Map<String, String> countryToCountryCode = new HashMap<>();
+    private Map<String, String> countryToCountryCodeTwo = new HashMap<>();
 
     /**
      * Default constructor that loads the country codes from "country-codes.txt"
@@ -43,6 +44,7 @@ public class CountryCodeConverter {
                 String[] parts = line.split("\t");
                 countryCodeToCountry.put(parts[2].toLowerCase(), parts[0]);
                 countryToCountryCode.put(parts[0], parts[2].toLowerCase());
+                countryToCountryCodeTwo.put(parts[0], parts[1].toLowerCase());
             }
         }
         catch (IOException | URISyntaxException ex) {
@@ -76,4 +78,11 @@ public class CountryCodeConverter {
     public int getNumCountries() {
         return countryCodeToCountry.size();
     }
+
+    /**
+     * Return the code of the country for the given country name.
+     * @param country the name of the country
+     * @return the 2-letter code of the country
+     */
+    public String fromCountryTwo(String country){return countryToCountryCodeTwo.get(country);}
 }

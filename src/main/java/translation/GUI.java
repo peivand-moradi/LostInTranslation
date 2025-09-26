@@ -3,10 +3,12 @@ package translation;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
+import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 // TODO Task D: Update the GUI for the program to align with UI shown in the README example.
@@ -38,7 +40,27 @@ public class GUI {
             // List settings
             countryList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             JScrollPane countryScroll = new JScrollPane(countryList);
-            countryScroll.setPreferredSize(new Dimension(380, 190));
+            countryScroll.setPreferredSize(new Dimension(420, 200));
+
+            /// Flags ///
+            // Load flag icons for each country code
+            Map<String, ImageIcon> flags = loadFlagIcons(countryNames, countryConverter);
+
+            countryList.setCellRenderer((list, value, index, isSelected,
+                                         cellHasFocus) -> {
+                JLabel label = new JLabel((String) value);
+                label.setIcon(flags.get(value));
+                label.setHorizontalTextPosition(SwingConstants.RIGHT);
+                label.setIconTextGap(10);
+                if (isSelected) {
+                    label.setBackground(list.getSelectionBackground());
+                    label.setForeground(list.getSelectionForeground());
+                    label.setOpaque(true);
+                } else {
+                    label.setOpaque(false);
+                }
+                return label;
+            });
 
             /// language dropdown ///
             // Fetch full languages
@@ -106,4 +128,24 @@ public class GUI {
             frame.setVisible(true);
         });
     }
+
+    /**
+     * Helper to preload flags
+     **/
+    private static Map<String, ImageIcon> loadFlagIcons(String[] countryNames, CountryCodeConverter converter) {
+        Map<String, ImageIcon> map = new HashMap<>();
+        for (String name : countryNames) {
+            String code = converter.fromCountryTwo(name);
+            URL url = GUI.class.getResource("/flags/" + code.toLowerCase() + ".png");
+            if (url != null) {
+                ImageIcon icon = new ImageIcon(url);
+                Image img = icon.getImage().getScaledInstance(24, 16, Image.SCALE_SMOOTH);
+                map.put(name, new ImageIcon(img));
+            } else {
+                map.put(name, null);
+            }
+        }
+        return map;
+    }
+
 }
